@@ -5,8 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useAuth } from '../../../contexts/AuthContext';
-import { getUserProfile } from '../../../redux/slices/User/userSlice';
-import { checkUserPermission, deleteUser, updateUserProfile } from '../../../redux/slices/userSlice';
+import { checkUserPermission, deleteUser, getUserProfile, updateUserProfile } from '../../../redux/slices/userSlice';
 import { getStoredSession } from '../../../utils/authStorage';
 
 const MyProfile = () => {
@@ -385,3 +384,5 @@ const MyProfile = () => {
 };
 
 export default MyProfile;
+
+

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { clearAuthSession, getStoredSession, storeAuthSession } from "../../../utils/authStorage";
+import { navigateToInternalPath } from "../../../utils/navigation";
 import * as api from "../../Api";
 
 // For Unauthenticated User
@@ -9,7 +10,7 @@ function logouterror() {
   // localStorage.removeItem("trust-account");
   clearAuthSession();
   setTimeout(() => {
-    window.location.href = "/";
+    navigateToInternalPath("/");
   }, 1000);
 }
 
@@ -151,8 +152,7 @@ const userSlice = createSlice({
         // localStorage.removeItem("trust-account");
         clearAuthSession();
         setTimeout(() => {
-          window.location.href = "/login"
-        }, 1000);
+          navigateToInternalPath("/login");}, 1000);
       })
       // Create user
       .addCase(signup.pending, (state) => {
@@ -165,8 +165,7 @@ const userSlice = createSlice({
         state.message = "User created successfully";
         toast.success(action.payload.message || "User Register successfully")
         setTimeout(() => {
-          window.location.href = "/login"
-        }, 1000);
+          navigateToInternalPath("/login");}, 1000);
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
@@ -194,8 +193,7 @@ const userSlice = createSlice({
           (storeAuthSession(action.payload), toast.success(action.payload.message || "User Login successfully")) :
           toast.error("User Not authrized to access this resource")
         setTimeout(() => {
-          window.location.href = "/bank-statement"
-        }, 1000);
+          navigateToInternalPath("/bank-statement");}, 1000);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -321,3 +319,4 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
+
