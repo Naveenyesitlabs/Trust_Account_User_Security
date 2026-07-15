@@ -1,8 +1,20 @@
 import html2pdf from 'html2pdf.js';
 import { pdfStyles } from './pdfStyle';
 
-export const exportToPDF = (genratedReconciliation,attorneyFormData, bankFormData, attorneySignePrivew, bankSignePrivew, reportName = "Reconciliation_Certificate") => {
-  
+const appendHtmlToContainer = (container, htmlContent) => {
+  const parser = new DOMParser();
+  const parsedDocument = parser.parseFromString(htmlContent, 'text/html');
+
+  parsedDocument.head.querySelectorAll('style, link').forEach((node) => {
+    container.appendChild(node.cloneNode(true));
+  });
+
+  Array.from(parsedDocument.body.childNodes).forEach((node) => {
+    container.appendChild(node.cloneNode(true));
+  });
+};
+
+export const exportToPDF = (genratedReconciliation, attorneyFormData, bankFormData, attorneySignePrivew, bankSignePrivew, reportName = "Reconciliation_Certificate") => {
   const reconciliationHtml = `
   <head>
 <style>${pdfStyles}</style>
@@ -10,7 +22,6 @@ export const exportToPDF = (genratedReconciliation,attorneyFormData, bankFormDat
 <body>
 <div style="padding: 10px; background-color: #fff; font-family: Arial, color: #ccc sans-serif; font-size: 14px; width: 100%;">
   <h1 style="text-align: center; margin-bottom: 30px;">FIRM RECORDS - ACCOUNT BALANCES</h1>
-  <!-- Section 1 -->
   <div style="margin-bottom: 20px; color: #333;">
   <h3 style="margin-bottom: 5px;">1. TRUST ACCOUNT JOURNAL BALANCE</h3>
   <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
@@ -26,8 +37,6 @@ export const exportToPDF = (genratedReconciliation,attorneyFormData, bankFormDat
   </div>
 </div>
 
-
-  <!-- Section 2 -->
   <div style="margin-bottom: 10px; color: #333;">
     <h3 style="margin-bottom: 5px;">2 TOTAL OF ALL INDIVIDUAL LEDGER BALANCES</h3>
 
@@ -113,8 +122,6 @@ export const exportToPDF = (genratedReconciliation,attorneyFormData, bankFormDat
      </div>
   </div>
 
-  <!-- Preparer Information -->
-
  <div style="margin-top: 20px; color:#333">
   <h1 style="text-align: center; margin-bottom: 10px;">BANK RECORDS - ACCOUNT BALANCES</h1>
   <div style="display: flex; gap: 40px; justify-content: space-between; align-items: flex-start; font-size: 14px;">
@@ -143,7 +150,6 @@ export const exportToPDF = (genratedReconciliation,attorneyFormData, bankFormDat
    </div>
  </div>
 
-    <!-- Attorney Certification -->
     <div style="margin-top: 10px; color: #333; ">
   <h1 style="text-align: center; margin-bottom: 5px; font-size: 14px;">Attorney Certification</h1>
   <p style="margin: 0; flex: 1; font-weight: 500;
@@ -166,7 +172,7 @@ export const exportToPDF = (genratedReconciliation,attorneyFormData, bankFormDat
       <strong style="color:#333; font-size: 14px; ">Bar Number:</strong>
     </div>
     <div style="text-align: center; color: #333; font-size: 14px;">
-    <P> ${attorneySignePrivew ? `<img src="${attorneySignePrivew}" style="height: 35px; width: 80PX" />` : ""}</P>
+    <p>${attorneySignePrivew ? `<img src="${attorneySignePrivew}" style="height: 35px; width: 80PX" />` : ""}</p>
       <strong style="color:#333; font-size: 14px; ">Signature</strong>
     </div>
     <div style="text-align: center; color: #333; font-size: 14px;">
@@ -180,14 +186,10 @@ export const exportToPDF = (genratedReconciliation,attorneyFormData, bankFormDat
 
 </div>
 </body>
-    
     `;
 
-
   const container = document.createElement('div');
-  // container.style.position = 'absolute';
-  // container.style.left = '-9999px'; // hide offscreen
-  container.innerHTML = reconciliationHtml;
+  appendHtmlToContainer(container, reconciliationHtml);
   document.body.appendChild(container);
 
   setTimeout(() => {

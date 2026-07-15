@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { clearAuthSession, storeAuthSession } from "../../utils/authStorage";
+import { isSafeInternalPath, navigateToInternalPath } from "../../utils/navigation";
 import * as api from "../Api";
 
 // For Unauthenticated User
@@ -13,7 +14,7 @@ function logouterror(action) {
   // localStorage.removeItem("trust-account");
   clearAuthSession();
   setTimeout(() => {
-    window.location.href = "/login";
+    navigateToInternalPath("/login");
   }, 1000);
 }
 
@@ -23,12 +24,14 @@ function handleRedirect(action) {
   const firstAccessible = permissionsList.find(
     item => item?.has_read_permission === 1 || item?.has_read_permission === '1'
   );
-  if (firstAccessible?.url) {
+  if (isSafeInternalPath(firstAccessible?.url)) {
     toast.success(action?.payload?.message || "User Login successfull");
-    window.location.href = firstAccessible.url;
+    navigateToInternalPath(firstAccessible.url);
   } else {
     toast.error("You don't have permission to access any page!.");
     localStorage.clear();
+    clearAuthSession();
+    navigateToInternalPath("/login");
   }
 }
 
@@ -197,8 +200,7 @@ const userSlice = createSlice({
         // localStorage.removeItem("trust-account");
         clearAuthSession();
         setTimeout(() => {
-          window.location.href = "/login"
-        }, 1000);
+          navigateToInternalPath("/login");}, 1000);
       })
       // Create user
       .addCase(signup.pending, (state) => {
@@ -211,8 +213,7 @@ const userSlice = createSlice({
         state.message = "User created successfully";
         toast.success(action.payload.message || "User Register successfully")
         setTimeout(() => {
-          window.location.href = "/login"
-        }, 1000);
+          navigateToInternalPath("/login");}, 1000);
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
@@ -230,8 +231,8 @@ const userSlice = createSlice({
       //   state.user = action.payload;
       //   console.log("action.payload", action.payload.subscription.is_subscription_active)
       //   setTimeout(() => {
-      //     window.location.href = action.payload.subscription.is_subscription_active == 'active' ? "/bank-statement" :'/subscription-plan'
-      //     // window.location.href = "/bank-statement"
+      //     navigateToInternalPath = action.payload.subscription.is_subscription_active == 'active' ? "/bank-statement" :'/subscription-plan'
+      //     // navigateToInternalPath = "/bank-statement"
       //   }, 1000);
       //   action.payload.role == 'user' || action.payload.role == 'attorney' ?
       //     (localStorage.setItem("trust-account", JSON.stringify(action.payload)), toast.success(action.payload.message || "User Login successfully")) :
@@ -249,8 +250,7 @@ const userSlice = createSlice({
         if (state.menuPermissions.length <= 0) {
           toast.error("User Not authrized to access this resource");
           setTimeout(() => {
-            window.location.href = "/login"
-          }, 1000);
+            navigateToInternalPath("/login");}, 1000);
         } else {
           // if (action?.payload?.token) {
           //   const expiresAt = Date.now() + 1000 * 60 * 60; // e.g. 1hr, match your real token TTL
@@ -271,15 +271,15 @@ const userSlice = createSlice({
           handleRedirect(action)
           // setTimeout(() => {
           //   handle
-          //   window.location.href = action?.payload?.subscription?.is_subscription_active == 'active' ? "/my-profile" : '/subscription-plan'
-          //   // window.location.href = "/bank-statement"
+          //   navigateToInternalPath = action?.payload?.subscription?.is_subscription_active == 'active' ? "/my-profile" : '/subscription-plan'
+          //   // navigateToInternalPath = "/bank-statement"
           // }, 1000);
         }
         // action.payload.role == 'user' || action.payload.role == 'attorney' ?
         //   (localStorage.setItem("trust-account", JSON.stringify(action.payload)), toast.success(action.payload.message || "User Login successfully")) :
         //   toast.error("User Not authrized to access this resource")
         // setTimeout(() => {
-        //   window.location.href = "/bank-statement"
+        //   navigateToInternalPath = "/bank-statement"
         // }, 1000);
       })
 
@@ -441,8 +441,7 @@ const userSlice = createSlice({
         localStorage.removeItem("trust-account-subscription-plan");
         clearAuthSession();
         setTimeout(() => {
-          window.location.href = "/login"
-        }, 1000)
+          navigateToInternalPath("/login");}, 1000)
 
       })
       .addCase(deleteUser.rejected, (state, action) => {
@@ -460,8 +459,7 @@ const userSlice = createSlice({
           localStorage.removeItem("trust-account-subscription-plan");
           clearAuthSession();
           setTimeout(() => {
-            window.location.href = "/login"
-          }, 1000)
+            navigateToInternalPath("/login");}, 1000)
         }
       })
       .addCase(checkUserPermission.pending, (state) => {
@@ -490,3 +488,6 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
+
+
+

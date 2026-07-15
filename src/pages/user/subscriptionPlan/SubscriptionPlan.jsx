@@ -2,63 +2,60 @@ import getSymbolFromCurrency from 'currency-symbol-map';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getingAllPlans, subscribePlan } from '../../../redux/slices/subscriptionPlanSlice';
 import { getStoredSession } from '../../../utils/authStorage';
+import { navigateToExternalUrl } from '../../../utils/navigation';
 
 const SubscriptionPlan = () => {
-    const { isSidebarOpen } = useAuth()
-    const dispatch = useDispatch()
-    const { allPlans } = useSelector((state) => state.subscriptionPlan)
-    const [activePlan, setActivePlan] = useState('')
-    const [userData, setUserData] = useState({})
+    const { isSidebarOpen } = useAuth();
+    const dispatch = useDispatch();
+    const { allPlans } = useSelector((state) => state.subscriptionPlan);
+    const [activePlan, setActivePlan] = useState('');
+    const [userData, setUserData] = useState({});
     const [user_id, setUser_id] = useState('');
-    const [superAdminPlan, setSuperAdminPlan] = useState('')
-    const navigate = useNavigate()
+    const [superAdminPlan, setSuperAdminPlan] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const session = getStoredSession();
         if (!session?.userid) {
-            navigate('/login')
+            navigate('/login');
         }
-    }, [])
+    }, [navigate]);
 
     const handleBuySubscription = async (plan_id) => {
-        console.log("plan_id", plan_id)
         const formData = {
             plan_id,
             user_id
-        }
-        const result = await dispatch(subscribePlan(formData))
-        const url = result?.payload?.data?.checkoutUrl
+        };
+        const result = await dispatch(subscribePlan(formData));
+        const url = result?.payload?.data?.checkoutUrl;
 
-        if (url) {
-            window.location.href = url;
-        } else {
-            console.error("Checkout URL not found");
+        if (url && navigateToExternalUrl(url)) {
+            return;
         }
-    }
+
+        toast.error('Checkout URL not found or invalid.');
+    };
+
     useEffect(() => {
-        setActivePlan(localStorage.getItem('trust-account-subscription-plan'))
+        setActivePlan(localStorage.getItem('trust-account-subscription-plan'));
         const isSubscribedData = JSON.parse(localStorage.getItem('isSubscribed'));
-        // const userData = JSON.parse(localStorage.getItem("trust-account"));
-        // console.log("userData",userData)
+
         if (isSubscribedData) {
-            setActivePlan(isSubscribedData?.plan_id)
-            // console.log("plan_id", localStorage.getItem('trust-account-subscription-plan'))
+            setActivePlan(isSubscribedData?.plan_id);
         }
 
-        // setUserData(JSON.parse(localStorage.getItem('trust-account')))
-        setUserData(getStoredSession())
-        dispatch(getingAllPlans())
-    }, [dispatch])
+        setUserData(getStoredSession());
+        dispatch(getingAllPlans());
+    }, [dispatch]);
 
     useEffect(() => {
         setUser_id(userData?.userid);
-        setSuperAdminPlan(userData?.super_admin_selected_plan)
-    }, [userData])
-
-    // console.log("userData", activePlan)
+        setSuperAdminPlan(userData?.super_admin_selected_plan);
+    }, [userData]);
 
     const formatedFitchur = (rawFeatures) => {
         if (!rawFeatures) return [];
@@ -66,8 +63,8 @@ const SubscriptionPlan = () => {
             const cleaned = rawFeatures.replace(/'/g, '"');
             const parsed = JSON.parse(cleaned);
             return Array.isArray(parsed) ? [...new Set(parsed)] : [];
-        } catch (e) {
-            console.error("Invalid features format:", e);
+        } catch (error) {
+            console.error('Invalid features format:', error);
             return [];
         }
     };
@@ -185,26 +182,7 @@ const SubscriptionPlan = () => {
                 </div>
             </div >
         </>
-    )
-}
+    );
+};
 
-
-{/* <div className="plan-item-inr">
-    <div className="plan-item-head">
-        <p>Premium</p>
-        <h3 className="price">$299 <span>/month</span></h3>
-    </div>
-    <div className="plan-item-content">
-        <ul>
-            <li>
-                <img src="images/check-icon.svg" alt="check-icon" />
-                Includes advanced features like automated notifications, integration with other law practice management software, enhanced security features, and more comprehensive reporting and analytics.
-            </li>
-        </ul>
-    </div>
-    <div className="plan-item-btn" onClick={handleBuySubscription}>
-        <a href="#" className="blue-btn">Buy now</a>
-    </div>
-</div> */}
-
-export default SubscriptionPlan
+export default SubscriptionPlan;
