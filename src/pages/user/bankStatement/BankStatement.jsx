@@ -136,57 +136,20 @@ const BankStatement = () => {
       "image/webp",
     ];
 
-    if (fileType === "application/pdf") {
-      const fileURL = URL.createObjectURL(file);
-      const printWindow = window.open(fileURL, "_blank");
-
-      printWindow.addEventListener("load", () => {
-        printWindow.focus();
-        printWindow.print();
-      });
-    } else if (imageTypes.includes(fileType)) {
-      const newTab = window.open();
-      // Image preview
-      newTab.document.write(`
-      <html>
-        <head><title>Image Preview</title></head>
-        <body style="margin:0; align-items:center; justify-content:center;">
-         <img 
-             src="${fileURL}" 
-             alt="Preview" 
-             style="
-                display: block;
-                margin: auto;
-                max-width: 80%;
-                max-height: 80vh;
-                object-fit: contain;
-          />
-
-        </body>
-      </html>
-    `);
-      newTab.document.close();
-    } else if (
-      fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-      fileType === "application/msword"
-    ) {
-      // Word Document Preview using Microsoft Office Online Viewer
-      const blob = new Blob([file], { type: fileType });
-      const url = URL.createObjectURL(blob);
-      const officeViewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
-        window.location.origin + url.replace(/^blob:/, '')
-      )}`;
-
-      // You need to upload file to your server or make it accessible via public URL for this to work fully
-      alert("Previewing local Word files in Microsoft Office Viewer requires a public file URL. For now, it may not work with local blobs.");
-      window.open(officeViewerUrl, "_blank");
+    if (fileType === "application/pdf" || imageTypes.includes(fileType)) {
+      const previewWindow = window.open(fileURL, "_blank", "noopener,noreferrer");
+      if (previewWindow) {
+        previewWindow.addEventListener("load", () => {
+          previewWindow.focus();
+          previewWindow.print();
+        });
+      }
     } else {
-      // Fallback download
       const link = document.createElement("a");
       link.href = fileURL;
       link.download = file.name;
       link.click();
-      alert("Preview not supported for this file type. File will be downloaded instead.");
+      toast.info("Preview is supported only for PDF and image files. The file has been downloaded instead.");
     }
   };
 
@@ -433,3 +396,4 @@ const BankStatement = () => {
 };
 
 export default BankStatement;
+

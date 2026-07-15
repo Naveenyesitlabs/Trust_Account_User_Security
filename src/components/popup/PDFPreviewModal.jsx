@@ -20,22 +20,11 @@ const PDFPreviewModal = ({ show, onClose, onSave, fileUrl }) => {
       );
     }
 
-    // Word/Excel (open via Google Docs Viewer as fallback)
-    if (
-      fileType === 'application/msword' ||
-      fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-      fileType === 'application/vnd.ms-excel' ||
-      fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    ) {
-      return (
-        <iframe
-          src={`https://docs.google.com/gview?url=${fileURL}&embedded=true`}
-          title="Document Preview"
-        />
-      );
-    }
-
-    return <p style={{ padding: 20 }}>Unsupported file format</p>;
+    return (
+      <div style={{ padding: 20 }}>
+        Preview is available only for PDF and image files. Please use Save to download unsupported document types.
+      </div>
+    );
   };
 
   return (
