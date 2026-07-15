@@ -134,7 +134,7 @@ const Sidebar = () => {
                 onClick={() => setDropdownOpen(!isDropdownOpen)}
               >
                 <p>Matt Kirlin</p>
-                <i className="fa-solid fa-chevron-down"></i>
+                <span className="dropdown-chevron" aria-hidden="true">&#9662;</span>
 
                 <div className="profile-conrol-menu">
                   <ul>
@@ -159,3 +159,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

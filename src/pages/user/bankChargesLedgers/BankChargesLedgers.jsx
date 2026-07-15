@@ -575,7 +575,7 @@ const BankChargesLedgers = () => {
         <div className="pop-up-inr-wrp">
           <div className="sign-popup">
             <div className="close-btn">
-              <i className="fa-solid fa-times"></i>
+              <span aria-hidden="true">&times;</span>
             </div>
             <div className="sign-pop-head">
               <h2>Entry Detail</h2>
@@ -675,3 +675,4 @@ const BankChargesLedgers = () => {
 };
 
 export default BankChargesLedgers;
+

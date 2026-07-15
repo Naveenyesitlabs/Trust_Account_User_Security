@@ -1,60 +1,40 @@
-import { useEffect, useRef } from "react";
+import { useState } from "react";
+import { DateRangePicker } from "rsuite";
+import "rsuite/dist/rsuite.min.css";
 
 const DesignerDateRangePicker = ({ onApply, onCancel, placeholder }) => {
-  const inputRef = useRef(null);
+  const [value, setValue] = useState(null);
 
-  useEffect(() => {
-    if (window.$ && window.$.fn.daterangepicker) {
-      const $ = window.$;
+  const handleChange = (selectedValue) => {
+    setValue(selectedValue);
 
-      const input = $(inputRef.current);
-
-      input.daterangepicker(
-        {
-          autoUpdateInput: false,
-          locale: {
-            cancelLabel: "Clear",
-          },
-        },
-        function (start, end) {
-          input.val(`${start.format("MM/DD/YYYY")} - ${end.format("MM/DD/YYYY")}`);
-        }
-      );
-
-      input.on("apply.daterangepicker", function (ev, picker) {
-        if (onApply) {
-          onApply([picker.startDate.toDate(), picker.endDate.toDate()]);
-        }
-        input.val(`${picker.startDate.format("MM/DD/YYYY")} - ${picker.endDate.format("MM/DD/YYYY")}`);
-      });
-
-      input.on("cancel.daterangepicker", function () {
-        if (onCancel) {
-          onCancel();
-        }
-        input.val("");
-      });
-
-      return () => {
-        input.data("daterangepicker")?.remove(); // Cleanup
-      };
+    if (selectedValue?.length === 2) {
+      onApply?.(selectedValue);
+      return;
     }
-  }, [onApply, onCancel]);
+
+    onCancel?.();
+  };
+
+  const handleClean = () => {
+    setValue(null);
+    onCancel?.();
+  };
 
   return (
-    <>
-      <label className="daterange-btn">
-        <img src="/images/filter-icons/date.svg" alt="" />
-        <input
-          type="text"
-          readOnly
-          className="input"
-          name="datefilter"
-          placeholder={placeholder || "Sign Up Date Range"}
-          ref={inputRef}
-        />
-      </label>
-    </>
+    <label className="daterange-btn">
+      <img src="/images/filter-icons/date.svg" alt="" />
+      <DateRangePicker
+        value={value}
+        onChange={handleChange}
+        onClean={handleClean}
+        editable={false}
+        cleanable
+        placement="bottomEnd"
+        placeholder={placeholder || "Sign Up Date Range"}
+        className="input"
+      />
+    </label>
   );
 };
 

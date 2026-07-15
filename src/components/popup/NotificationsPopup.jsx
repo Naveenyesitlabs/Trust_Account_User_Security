@@ -24,7 +24,7 @@
         //         {/* <div className='pop-wrp notification'> */}
         //         <div className="sign-popup ">
         //             <div className="close-btn">
-        //                 <i className="fa-solid fa-times"></i>
+        //                 <span aria-hidden="true">&times;</span>
         //             </div>
         //             <div className="sign-pop-head mb-4">
         //                 <div className="modal-icon">
@@ -133,7 +133,7 @@
         }
       `}</style>
                 <div className="close-btn" onClick={onClose}>
-                    <i className="fa-solid fa-times"></i>
+                    <span aria-hidden="true">&times;</span>
                 </div>
 
                 <div className="sign-pop-head mb-3">
@@ -181,3 +181,4 @@
 // }
 
 // export default NotificationsPopup
+

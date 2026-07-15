@@ -18,8 +18,7 @@ const SubscriptionPlan = () => {
 
     useEffect(() => {
         const session = getStoredSession();
-        const token = session?.token
-        if (!token) {
+        if (!session?.userid) {
             navigate('/login')
         }
     }, [])

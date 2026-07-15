@@ -357,7 +357,7 @@ const Sidebar = ({ menuPermissions }) => {
                 onClick={() => setDropdownOpen(!isDropdownOpen)}
               >
                 <p>{userProfile?.name ? userProfile?.name : ""}</p>
-                <i className="fa-solid fa-chevron-down"></i>
+                <span className="dropdown-chevron" aria-hidden="true">&#9662;</span>
 
                 <div className="profile-conrol-menu" style={{
                   zIndex: 1000000000000,

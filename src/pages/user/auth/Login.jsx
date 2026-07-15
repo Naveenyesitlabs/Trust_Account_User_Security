@@ -15,7 +15,7 @@ const Login = () => {
 
   useEffect(() => {
     const session = getStoredSession();
-    if (session?.userData) {
+    if (session?.userid) {
       navigate("/bank-statement");
     }
   }, []);
@@ -198,3 +198,4 @@ const Login = () => {
 };
 
 export default Login;
+

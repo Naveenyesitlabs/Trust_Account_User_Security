@@ -3,4 +3,16 @@ dist/
 build/
 coverage/
 public/js/
+public/admin/
+public/superadmin/
 *.min.js
+src/components/js/
+src/layouts/**/js/
+src/pages/admin/
+src/pages/superadmin/
+src/components/sidebar/AdminSidebar.jsx
+src/components/sidebar/SuperAdminSidebar.jsx
+src/contexts/AuthContext1.jsx
+USER_FRONTEND_SECURITY_VALIDATION_REPORT_2026-07-10.md
+src/redux/slices/User/
+

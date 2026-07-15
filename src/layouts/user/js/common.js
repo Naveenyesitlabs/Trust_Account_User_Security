@@ -313,7 +313,7 @@ jQuery(document).ready(function($){
             const input = this.previousElementSibling;
             if (input.type === 'password') {
                 input.type = 'text';
-                this.querySelector("img").src = 'https://cdn-icons-png.flaticon.com/512/9726/9726390.png';
+                this.querySelector("img").src = './images/eye-open.png';
             } else {
                 input.type = 'password';
                 this.querySelector("img").src = './images/eye-open.png';
@@ -363,7 +363,7 @@ jQuery(document).ready(function($){
     document.querySelectorAll('.client-list li').forEach(function(item) {
         item.addEventListener('click', function() {
           document.querySelector('#search-client').value = this.textContent;
-          document.querySelector('.client-name').innerHTML = this.textContent;
+          document.querySelector('.client-name').textContent = this.textContent;
           $(".search-ledger-body").slideUp();
         });
     });
