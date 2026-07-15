@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { clearAuthSession } from "../../utils/authStorage";
 import * as api from "../Api";
+import { navigateToInternalPath } from "../../utils/navigation";
 
 
 
@@ -15,7 +16,7 @@ function logouterror(action) {
   // localStorage.removeItem("trust-account");
   clearAuthSession();
   setTimeout(() => {
-    window.location.href = "/login";
+    navigateToInternalPath("/login");
   }, 1000);
 }
 

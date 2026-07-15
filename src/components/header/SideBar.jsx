@@ -7,12 +7,13 @@ import "../../../public/css/dashboard.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { getNotifaction, getUserProfile, markReadNotification } from "../../redux/slices/userSlice";
 import { clearAuthSession, getStoredSession } from '../../utils/authStorage';
+import { navigateToInternalPath } from "../../utils/navigation";
 
 
 function handleRedirect() {
   toast.error('Something wrong! please login again');
   localStorage.clear();
-  window.location.href = "/login";
+  navigateToInternalPath("/login");
 }
 
 
@@ -386,3 +387,4 @@ const Sidebar = ({ menuPermissions }) => {
 };
 
 export default Sidebar;
+
